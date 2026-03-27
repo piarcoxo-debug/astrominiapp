@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-  <title>Astro App NoDB</title>
+  <title>Astro App</title>
   <meta name="theme-color" content="#0b1020">
   <link rel="stylesheet" href="./styles.css">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -18,7 +18,7 @@
         <div class="brand__logo">✦</div>
         <div>
           <div class="brand__title">Astro App</div>
-          <div class="brand__subtitle">Без базы, все функции в mini app</div>
+          <div class="brand__subtitle">Красивая версия без базы</div>
         </div>
       </div>
       <button id="homeBtn" class="icon-btn hidden">⌂</button>
@@ -27,9 +27,9 @@
     <main class="phone-frame">
       <section id="screen-home" class="screen active">
         <div class="hero-card glass">
-          <div class="chip">No DB Version</div>
-          <h1>Все функции без базы данных</h1>
-          <p>Эта версия работает без SQLite и сервера. Профиль и история хранятся локально в mini app через localStorage.</p>
+          <div class="chip">Beautiful No DB</div>
+          <h1>Все функции меню сохранены</h1>
+          <p>Профиль стал красивее, но прогноз, совместимость, счастливое число и история остались на месте.</p>
         </div>
 
         <div class="home-preview glass">
@@ -38,11 +38,31 @@
         </div>
 
         <div class="grid-menu">
-          <button class="menu-card glass" data-target="profile">👤 Профиль</button>
-          <button class="menu-card glass" data-target="forecast">🔮 Прогноз</button>
-          <button class="menu-card glass" data-target="compatibility">💕 Совместимость</button>
-          <button class="menu-card glass" data-target="lucky">🍀 Счастливое число</button>
-          <button class="menu-card glass" data-target="history">📊 История</button>
+          <button class="menu-card glass" data-target="profile">
+            <span class="menu-card__icon">👤</span>
+            <span class="menu-card__title">Профиль</span>
+            <span class="menu-card__text">Имя, дата рождения, код и число</span>
+          </button>
+          <button class="menu-card glass" data-target="forecast">
+            <span class="menu-card__icon">🔮</span>
+            <span class="menu-card__title">Прогноз</span>
+            <span class="menu-card__text">Любовь, деньги, энергия</span>
+          </button>
+          <button class="menu-card glass" data-target="compatibility">
+            <span class="menu-card__icon">💕</span>
+            <span class="menu-card__title">Совместимость</span>
+            <span class="menu-card__text">По двум датам рождения</span>
+          </button>
+          <button class="menu-card glass" data-target="lucky">
+            <span class="menu-card__icon">🍀</span>
+            <span class="menu-card__title">Счастливое число</span>
+            <span class="menu-card__text">Число удачи на сегодня</span>
+          </button>
+          <button class="menu-card glass" data-target="history">
+            <span class="menu-card__icon">📊</span>
+            <span class="menu-card__title">История</span>
+            <span class="menu-card__text">Последние действия в приложении</span>
+          </button>
         </div>
       </section>
 
@@ -59,6 +79,7 @@
           </div>
           <p id="profileMsg" class="note"></p>
         </div>
+
         <div id="profileView" class="hidden profile-card glass"></div>
       </section>
 

@@ -1,8 +1,8 @@
 const tg = window.Telegram?.WebApp;
 if (tg) { tg.ready(); tg.expand(); tg.MainButton.hide(); }
 
-const STORAGE_PROFILE = "astro_nodb_profile";
-const STORAGE_HISTORY = "astro_nodb_history";
+const STORAGE_PROFILE = "astro_nodb_beautiful_profile";
+const STORAGE_HISTORY = "astro_nodb_beautiful_history";
 
 const texts = {
   "Овен": { love: "Сегодня в любви важны прямота и уважение.", money: "Действуй быстро, но не импульсивно.", energy: "Энергии много — направь её в одну цель." },
@@ -24,6 +24,20 @@ const codeMeanings = {
   7:"Глубина. Мудрость и анализ.",8:"Сила. Результат и влияние.",9:"Мудрость. Завершение и человечность.",
   11:"Вдохновитель. Свет и интуиция.",22:"Создатель. Масштаб и воплощение.",33:"Проводник. Тепло и поддержка."
 };
+const personalMessages = {
+  1:"Твой путь раскрывается через смелость и первый шаг.",
+  2:"Твоя сила в мягкости и умении чувствовать тонкие вещи.",
+  3:"Проявленность и творчество делают тебя сильнее.",
+  4:"Структура и порядок помогают тебе выигрывать.",
+  5:"Тебе важно двигаться и обновляться.",
+  6:"Ты создаешь тепло вокруг и умеешь поддерживать.",
+  7:"В тебе много глубины и внутренней мудрости.",
+  8:"Ты умеешь превращать намерение в результат.",
+  9:"Твоя зрелость и человечность — твоя опора.",
+  11:"Ты можешь вдохновлять других своим светом.",
+  22:"В тебе есть потенциал для больших дел.",
+  33:"Твоя доброта и забота реально меняют мир вокруг."
+};
 
 const screens = {
   home: document.getElementById("screen-home"),
@@ -37,9 +51,7 @@ const screens = {
 let stack = ["home"];
 let current = "home";
 
-function haptic(type="light") {
-  try { tg?.HapticFeedback?.impactOccurred(type); } catch {}
-}
+function haptic(type="light") { try { tg?.HapticFeedback?.impactOccurred(type); } catch {} }
 function show(name, push=true) {
   if (!screens[name]) return;
   Object.values(screens).forEach(s => s.classList.remove("active"));
@@ -90,36 +102,32 @@ function luckyNum(z, code) {
   const base = [...z].reduce((s,ch)=>s+ch.charCodeAt(0),0) + code*9 + seed;
   return (base % 9) + 1;
 }
-function getProfile() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_PROFILE) || "null"); } catch { return null; }
-}
-function saveProfile(profile) {
-  localStorage.setItem(STORAGE_PROFILE, JSON.stringify(profile));
-}
-function clearProfile() {
-  localStorage.removeItem(STORAGE_PROFILE);
-}
-function getHistory() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_HISTORY) || "[]"); } catch { return []; }
-}
-function saveHistory(items) {
-  localStorage.setItem(STORAGE_HISTORY, JSON.stringify(items.slice(0,20)));
-}
+function getProfile() { try { return JSON.parse(localStorage.getItem(STORAGE_PROFILE) || "null"); } catch { return null; } }
+function saveProfile(profile) { localStorage.setItem(STORAGE_PROFILE, JSON.stringify(profile)); }
+function clearProfile() { localStorage.removeItem(STORAGE_PROFILE); }
+function getHistory() { try { return JSON.parse(localStorage.getItem(STORAGE_HISTORY) || "[]"); } catch { return []; } }
+function saveHistory(items) { localStorage.setItem(STORAGE_HISTORY, JSON.stringify(items.slice(0,20))); }
 function addHistory(type, title, preview) {
   const items = getHistory();
   items.unshift({type, title, preview, created_at: new Date().toLocaleString("ru-RU")});
   saveHistory(items);
 }
-function card(title, body) {
-  return `<div class="glass result-card"><div style="font-weight:700;margin-bottom:8px">${title}</div><div>${body}</div></div>`;
+function card(title, body, accent=false) {
+  return `<div class="glass info-card ${accent ? 'info-card--accent' : ''}"><div class="info-title">${title}</div><div>${body}</div></div>`;
 }
 function profileCard(profile) {
   return `
-    <div class="profile-head">
-      <div class="avatar">${(profile.name?.[0] || "A").toUpperCase()}</div>
-      <div>
-        <div class="profile-name">${profile.name}</div>
-        <div class="muted">${profile.zodiac}</div>
+    <div class="profile-hero">
+      <div class="profile-head">
+        <div class="avatar-ring"><div class="avatar">${(profile.name?.[0] || "A").toUpperCase()}</div></div>
+        <div>
+          <div class="profile-name">${profile.name}</div>
+          <div class="profile-subtitle">${profile.zodiac}</div>
+          <div class="badges">
+            <span class="badge">Дата: ${profile.birthdate}</span>
+            <span class="badge">Сегодня</span>
+          </div>
+        </div>
       </div>
     </div>
     <div class="stat-grid">
@@ -127,7 +135,8 @@ function profileCard(profile) {
       <div class="stat"><span>Код человека</span><strong>${profile.code}</strong></div>
       <div class="stat"><span>Счастливое число</span><strong>${profile.lucky}</strong></div>
     </div>
-    <div class="glass result-card"><div style="font-weight:700;margin-bottom:8px">Описание кода</div><div>${codeMeanings[profile.code] || "Личный путь роста и самореализации."}</div></div>
+    ${card("Описание кода", codeMeanings[profile.code] || "Личный путь роста и самореализации.")}
+    ${card("Личное послание", personalMessages[profile.code] || "Доверяй себе и своему внутреннему пути.", true)}
   `;
 }
 function updateHomePreview() {
@@ -197,7 +206,7 @@ document.getElementById("forecastBtn").addEventListener("click", () => {
     card("Любовь", t.love),
     card("Деньги", t.money),
     card("Энергия", t.energy),
-    card("Код судьбы", codeMeanings[code] || "Личный путь роста и самореализации.")
+    card("Код судьбы", codeMeanings[code] || "Личный путь роста и самореализации.", true)
   ].join("");
   view.classList.remove("hidden");
   addHistory("Прогноз", `${z} • код ${code}`, `${t.money} ${t.energy}`);
@@ -227,7 +236,7 @@ document.getElementById("compatBtn").addEventListener("click", () => {
   if (score >= 85) text = "Очень сильная совместимость.";
   else if (score < 55) text = "Совместимость непростая, но рабочая.";
   view.innerHTML = [
-    card("Совместимость", `${score}%`),
+    card("Совместимость", `${score}%`, true),
     card("1 человек", `${z1} • код ${c1}`),
     card("2 человек", `${z2} • код ${c2}`),
     card("Описание", text)
@@ -247,7 +256,7 @@ document.getElementById("luckyBtn").addEventListener("click", () => {
   const lucky = luckyNum(z, code);
   const view = document.getElementById("luckyView");
   view.innerHTML = [
-    card("Счастливое число", `${lucky}`),
+    card("Счастливое число", `${lucky}`, true),
     card("Детали", `${z} • код ${code}`)
   ].join("");
   view.classList.remove("hidden");
