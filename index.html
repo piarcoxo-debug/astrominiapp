@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-  <title>Astro Profile</title>
+  <title>Astro App NoDB</title>
   <meta name="theme-color" content="#0b1020">
   <link rel="stylesheet" href="./styles.css">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -13,127 +13,107 @@
 
   <div class="app-shell">
     <header class="topbar">
-      <button id="backBtn" class="icon-btn hidden" aria-label="Назад">←</button>
+      <button id="backBtn" class="icon-btn hidden">←</button>
       <div class="brand">
         <div class="brand__logo">✦</div>
         <div>
           <div class="brand__title">Astro App</div>
-          <div class="brand__subtitle">Красивый профиль пользователя</div>
+          <div class="brand__subtitle">Без базы, все функции в mini app</div>
         </div>
       </div>
-      <button id="homeBtn" class="icon-btn hidden" aria-label="Главная">⌂</button>
+      <button id="homeBtn" class="icon-btn hidden">⌂</button>
     </header>
 
     <main class="phone-frame">
       <section id="screen-home" class="screen active">
         <div class="hero-card glass">
-          <div class="hero-card__tag">Mini App</div>
-          <h1>Профиль в стиле приложения</h1>
-          <p>Сохрани дату рождения и открой красивую карточку профиля с числом, знаком зодиака и кратким описанием.</p>
-          <div class="hero-actions">
-            <button class="primary-btn menu-jump" data-target="profile-edit">Создать профиль</button>
-            <button class="secondary-btn menu-jump" data-target="profile-view">Открыть профиль</button>
-          </div>
+          <div class="chip">No DB Version</div>
+          <h1>Все функции без базы данных</h1>
+          <p>Эта версия работает без SQLite и сервера. Профиль и история хранятся локально в mini app через localStorage.</p>
         </div>
 
         <div class="home-preview glass">
-          <div class="home-preview__label">Быстрый просмотр</div>
+          <div class="home-preview__label">Быстрый просмотр профиля</div>
           <div id="homePreviewText" class="home-preview__value">Профиль ещё не заполнен</div>
         </div>
+
+        <div class="grid-menu">
+          <button class="menu-card glass" data-target="profile">👤 Профиль</button>
+          <button class="menu-card glass" data-target="forecast">🔮 Прогноз</button>
+          <button class="menu-card glass" data-target="compatibility">💕 Совместимость</button>
+          <button class="menu-card glass" data-target="lucky">🍀 Счастливое число</button>
+          <button class="menu-card glass" data-target="history">📊 История</button>
+        </div>
       </section>
 
-      <section id="screen-profile-edit" class="screen">
-        <div class="screen-head">
-          <div>
-            <div class="screen-head__eyebrow">Настройка</div>
-            <h2>Создать профиль</h2>
-          </div>
-        </div>
-
+      <section id="screen-profile" class="screen">
+        <div class="section-title">Профиль</div>
         <div class="glass form-card">
-          <label for="profileName">Имя</label>
-          <input id="profileName" type="text" placeholder="Например: Анна" maxlength="40">
-
-          <label for="profileBirthdate">Дата рождения</label>
-          <input id="profileBirthdate" type="text" placeholder="24.11.1997" maxlength="10" inputmode="numeric">
-
+          <label>Имя</label>
+          <input id="profileName" type="text" placeholder="Например: Анна">
+          <label>Дата рождения</label>
+          <input id="profileBirthdate" type="text" placeholder="24.11.1997">
           <div class="button-row">
-            <button id="saveProfileBtn" class="primary-btn">Сохранить профиль</button>
-            <button id="clearProfileBtn" class="danger-btn">Очистить</button>
+            <button id="saveProfileBtn" class="primary-btn">Сохранить</button>
+            <button id="deleteProfileBtn" class="danger-btn">Удалить</button>
           </div>
-
-          <p id="profileError" class="error hidden"></p>
-          <p id="profileSuccess" class="success hidden"></p>
+          <p id="profileMsg" class="note"></p>
         </div>
+        <div id="profileView" class="hidden profile-card glass"></div>
       </section>
 
-      <section id="screen-profile-view" class="screen">
-        <div class="screen-head">
-          <div>
-            <div class="screen-head__eyebrow">Профиль</div>
-            <h2>Карточка пользователя</h2>
+      <section id="screen-forecast" class="screen">
+        <div class="section-title">Прогноз</div>
+        <div class="glass form-card">
+          <label>Дата рождения</label>
+          <input id="forecastDate" type="text" placeholder="24.11.1997">
+          <button id="forecastBtn" class="primary-btn">Показать прогноз</button>
+          <p id="forecastMsg" class="note"></p>
+        </div>
+        <div id="forecastView" class="hidden result-stack"></div>
+      </section>
+
+      <section id="screen-compatibility" class="screen">
+        <div class="section-title">Совместимость</div>
+        <div class="glass form-card">
+          <label>Первая дата</label>
+          <input id="compatDate1" type="text" placeholder="24.11.1997">
+          <label>Вторая дата</label>
+          <input id="compatDate2" type="text" placeholder="13.03.1995">
+          <button id="compatBtn" class="primary-btn">Посчитать</button>
+          <p id="compatMsg" class="note"></p>
+        </div>
+        <div id="compatView" class="hidden result-stack"></div>
+      </section>
+
+      <section id="screen-lucky" class="screen">
+        <div class="section-title">Счастливое число</div>
+        <div class="glass form-card">
+          <label>Дата рождения</label>
+          <input id="luckyDate" type="text" placeholder="24.11.1997">
+          <button id="luckyBtn" class="primary-btn">Узнать число</button>
+          <p id="luckyMsg" class="note"></p>
+        </div>
+        <div id="luckyView" class="hidden result-stack"></div>
+      </section>
+
+      <section id="screen-history" class="screen">
+        <div class="section-title">История</div>
+        <div class="glass form-card">
+          <div class="button-row">
+            <button id="refreshHistoryBtn" class="secondary-btn">Обновить</button>
+            <button id="clearHistoryBtn" class="danger-btn">Очистить историю</button>
           </div>
         </div>
-
-        <div id="emptyProfile" class="glass empty-card">Профиль пока не создан. Сначала сохрани имя и дату рождения.</div>
-
-        <div id="profileCard" class="profile-card glass hidden">
-          <div class="profile-card__top">
-            <div class="avatar-ring">
-              <div id="avatarLetter" class="avatar-letter">A</div>
-            </div>
-
-            <div class="profile-main">
-              <div id="cardName" class="profile-name">Имя</div>
-              <div id="cardZodiac" class="profile-zodiac">Знак зодиака</div>
-              <div class="profile-badges">
-                <span class="badge">✨ Astro Profile</span>
-                <span id="cardToday" class="badge">Сегодня</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="profile-stats">
-            <div class="stat-block">
-              <span>Дата рождения</span>
-              <strong id="cardBirthdate">24.11.1997</strong>
-            </div>
-            <div class="stat-block">
-              <span>Код человека</span>
-              <strong id="cardCode">7</strong>
-            </div>
-            <div class="stat-block">
-              <span>Счастливое число</span>
-              <strong id="cardLucky">4</strong>
-            </div>
-          </div>
-
-          <div class="glass inner-card">
-            <div class="inner-card__title">Описание кода</div>
-            <p id="cardMeaning"></p>
-          </div>
-
-          <div class="glass inner-card accent">
-            <div class="inner-card__title">Личное послание</div>
-            <p id="cardMessage"></p>
-          </div>
-        </div>
+        <div id="historyList" class="result-stack"></div>
       </section>
     </main>
 
     <nav class="bottom-nav glass">
-      <button class="nav-btn active" data-target="home">
-        <span>⌂</span>
-        <small>Главная</small>
-      </button>
-      <button class="nav-btn" data-target="profile-edit">
-        <span>✎</span>
-        <small>Заполнить</small>
-      </button>
-      <button class="nav-btn" data-target="profile-view">
-        <span>👤</span>
-        <small>Профиль</small>
-      </button>
+      <button class="nav-btn active" data-target="home">Главная</button>
+      <button class="nav-btn" data-target="profile">Профиль</button>
+      <button class="nav-btn" data-target="forecast">Прогноз</button>
+      <button class="nav-btn" data-target="history">История</button>
     </nav>
   </div>
 
