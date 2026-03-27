@@ -72,6 +72,7 @@ const screens = {
   compatibility: document.getElementById("screen-compatibility"),
   lucky: document.getElementById("screen-lucky"),
   history: document.getElementById("screen-history"),
+  games: document.getElementById("screen-games"),
   "game-catch": document.getElementById("screen-game-catch"),
   "game-quiz": document.getElementById("screen-game-quiz"),
   "game-wheel": document.getElementById("screen-game-wheel"),
@@ -94,7 +95,7 @@ function show(name, push=true) {
   current = name;
   document.getElementById("backBtn").classList.toggle("hidden", current === "home");
   document.getElementById("homeBtn").classList.toggle("hidden", current === "home");
-  document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("active", b.dataset.target === name || (name.startsWith("game") && b.dataset.target === "game-catch")));
+  document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("active", b.dataset.target === name || ((name.startsWith("game") || name==="games") && b.dataset.target === "games")));
   if (name === "profile") renderProfile();
   if (name === "history") renderHistory();
   if (name === "game-catch") renderCatchBest();

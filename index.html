@@ -18,7 +18,7 @@
         <div class="brand__logo">✦</div>
         <div>
           <div class="brand__title">Astro App</div>
-          <div class="brand__subtitle">Версия с тремя мини-играми</div>
+          <div class="brand__subtitle">Игры исправлены</div>
         </div>
       </div>
       <button id="homeBtn" class="icon-btn hidden">⌂</button>
@@ -27,9 +27,9 @@
     <main class="phone-frame">
       <section id="screen-home" class="screen active">
         <div class="hero-card glass">
-          <div class="chip">Game Pack</div>
-          <h1>Три игры внутри mini app</h1>
-          <p>Сохранил все основные функции и добавил сразу три игры: «Поймай звезду», «Астро-угадайка» и «Колесо удачи дня».</p>
+          <div class="chip">Game Pack Fixed</div>
+          <h1>Все игры теперь в одном разделе</h1>
+          <p>Внизу кнопка «Игры» открывает отдельный экран со всеми тремя играми.</p>
         </div>
 
         <div class="home-preview glass">
@@ -38,46 +38,12 @@
         </div>
 
         <div class="grid-menu">
-          <button class="menu-card glass" data-target="profile">
-            <span class="menu-card__icon">👤</span>
-            <span class="menu-card__title">Профиль</span>
-            <span class="menu-card__text">Имя, дата рождения, код и число</span>
-          </button>
-          <button class="menu-card glass" data-target="forecast">
-            <span class="menu-card__icon">🔮</span>
-            <span class="menu-card__title">Прогноз</span>
-            <span class="menu-card__text">Любовь, деньги, энергия</span>
-          </button>
-          <button class="menu-card glass" data-target="compatibility">
-            <span class="menu-card__icon">💕</span>
-            <span class="menu-card__title">Совместимость</span>
-            <span class="menu-card__text">По двум датам рождения</span>
-          </button>
-          <button class="menu-card glass" data-target="lucky">
-            <span class="menu-card__icon">🍀</span>
-            <span class="menu-card__title">Счастливое число</span>
-            <span class="menu-card__text">Число удачи на сегодня</span>
-          </button>
-          <button class="menu-card glass" data-target="history">
-            <span class="menu-card__icon">📊</span>
-            <span class="menu-card__title">История</span>
-            <span class="menu-card__text">Последние действия в приложении</span>
-          </button>
-          <button class="menu-card glass" data-target="game-catch">
-            <span class="menu-card__icon">⭐</span>
-            <span class="menu-card__title">Поймай звезду</span>
-            <span class="menu-card__text">Лови звёзды за 20 секунд</span>
-          </button>
-          <button class="menu-card glass" data-target="game-quiz">
-            <span class="menu-card__icon">🪐</span>
-            <span class="menu-card__title">Астро-угадайка</span>
-            <span class="menu-card__text">Угадай знак по описанию</span>
-          </button>
-          <button class="menu-card glass" data-target="game-wheel">
-            <span class="menu-card__icon">🎡</span>
-            <span class="menu-card__title">Колесо удачи</span>
-            <span class="menu-card__text">Получи послание дня</span>
-          </button>
+          <button class="menu-card glass" data-target="profile"><span class="menu-card__icon">👤</span><span class="menu-card__title">Профиль</span><span class="menu-card__text">Имя, дата рождения, код и число</span></button>
+          <button class="menu-card glass" data-target="forecast"><span class="menu-card__icon">🔮</span><span class="menu-card__title">Прогноз</span><span class="menu-card__text">Любовь, деньги, энергия</span></button>
+          <button class="menu-card glass" data-target="compatibility"><span class="menu-card__icon">💕</span><span class="menu-card__title">Совместимость</span><span class="menu-card__text">По двум датам рождения</span></button>
+          <button class="menu-card glass" data-target="lucky"><span class="menu-card__icon">🍀</span><span class="menu-card__title">Счастливое число</span><span class="menu-card__text">Число удачи на сегодня</span></button>
+          <button class="menu-card glass" data-target="history"><span class="menu-card__icon">📊</span><span class="menu-card__title">История</span><span class="menu-card__text">Последние действия в приложении</span></button>
+          <button class="menu-card glass" data-target="games"><span class="menu-card__icon">🎮</span><span class="menu-card__title">Игры</span><span class="menu-card__text">Открыть все мини-игры</span></button>
         </div>
       </section>
 
@@ -143,6 +109,15 @@
         <div id="historyList" class="result-stack"></div>
       </section>
 
+      <section id="screen-games" class="screen">
+        <div class="section-title">Игры</div>
+        <div class="grid-menu">
+          <button class="menu-card glass" data-target="game-catch"><span class="menu-card__icon">⭐</span><span class="menu-card__title">Поймай звезду</span><span class="menu-card__text">Лови звёзды за 20 секунд</span></button>
+          <button class="menu-card glass" data-target="game-quiz"><span class="menu-card__icon">🪐</span><span class="menu-card__title">Астро-угадайка</span><span class="menu-card__text">Угадай знак по описанию</span></button>
+          <button class="menu-card glass" data-target="game-wheel"><span class="menu-card__icon">🎡</span><span class="menu-card__title">Колесо удачи</span><span class="menu-card__text">Получи послание дня</span></button>
+        </div>
+      </section>
+
       <section id="screen-game-catch" class="screen">
         <div class="section-title">Поймай звезду</div>
         <div class="glass form-card">
@@ -201,22 +176,10 @@
     </main>
 
     <nav class="bottom-nav glass">
-      <button class="nav-btn active" data-target="home">
-        <span class="nav-btn__icon">⌂</span>
-        <span class="nav-btn__label">Главная</span>
-      </button>
-      <button class="nav-btn" data-target="profile">
-        <span class="nav-btn__icon">👤</span>
-        <span class="nav-btn__label">Профиль</span>
-      </button>
-      <button class="nav-btn" data-target="forecast">
-        <span class="nav-btn__icon">🔮</span>
-        <span class="nav-btn__label">Прогноз</span>
-      </button>
-      <button class="nav-btn" data-target="game-catch">
-        <span class="nav-btn__icon">🎮</span>
-        <span class="nav-btn__label">Игры</span>
-      </button>
+      <button class="nav-btn active" data-target="home"><span class="nav-btn__icon">⌂</span><span class="nav-btn__label">Главная</span></button>
+      <button class="nav-btn" data-target="profile"><span class="nav-btn__icon">👤</span><span class="nav-btn__label">Профиль</span></button>
+      <button class="nav-btn" data-target="forecast"><span class="nav-btn__icon">🔮</span><span class="nav-btn__label">Прогноз</span></button>
+      <button class="nav-btn" data-target="games"><span class="nav-btn__icon">🎮</span><span class="nav-btn__label">Игры</span></button>
     </nav>
   </div>
 
