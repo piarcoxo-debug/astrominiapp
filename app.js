@@ -5,55 +5,56 @@ if (tg) {
   tg.MainButton.hide();
 }
 
-const STORAGE_PROFILE = "astro_profile";
-const STORAGE_HISTORY = "astro_history";
+const STORAGE_PROFILE = "astro_beautiful_profile";
 
-const zodiacTexts = {
-  "Овен": { love: "Сегодня в любви важны прямота и уважение. Спокойный честный разговор даст больше, чем давление.", money: "День подходит для быстрых решений, если они опираются на факты. Избегай импульсивных покупок.", energy: "Энергии много, но её лучше направить в одну главную цель." },
-  "Телец": { love: "Тепло и стабильность сегодня особенно важны. Маленький знак внимания укрепит близость.", money: "Практичные решения принесут лучший результат. Не спеши с риском.", energy: "Размеренный темп — твой плюс. Через спокойствие ты сделаешь больше." },
-  "Близнецы": { love: "Общение станет ключом к гармонии. Чем честнее слова, тем легче день.", money: "Сравнивай варианты и собирай информацию. Новая идея может оказаться ценной.", energy: "Сила дня — в гибкости. Переключайся осознанно, а не хаотично." },
-  "Рак": { love: "Сегодня особенно важно слышать не только слова, но и чувства.", money: "Избегай эмоциональных решений в финансах. Спокойный расчёт даст больше уверенности.", energy: "День подходит для восстановления и заботы о себе." },
-  "Лев": { love: "Харизма притягивает внимание, но искренность удерживает близость.", money: "Можно уверенно двигаться к амбициозной цели, если не переоценивать ресурсы.", energy: "Энергия дня поддерживает лидерство и проявленность." },
-  "Дева": { love: "Забота и внимание к деталям скажут больше длинных слов.", money: "Хороший день для порядка в бюджете, планов и расчётов.", energy: "Собранность станет источником силы." },
-  "Весы": { love: "Баланс между своими и чужими желаниями сегодня особенно важен.", money: "Сначала оцени, где твоя реальная выгода, и только потом соглашайся.", energy: "Гармония внутри влияет на всё вокруг." },
-  "Скорпион": { love: "Чувства могут быть глубокими, но сегодня полезна деликатность.", money: "День подходит для анализа, стратегии и скрытых возможностей.", energy: "Твоя энергия мощная, если направлена осознанно." },
-  "Стрелец": { love: "Лёгкость и открытость оживят отношения. Скажи то, что давно хотелось.", money: "Есть шанс увидеть новый путь к росту. Смотри шире, но не забывай о деталях.", energy: "День подталкивает к движению и смелым идеям." },
-  "Козерог": { love: "Надёжность сегодня говорит громче романтики.", money: "Сильный день для целей, дисциплины и долгих стратегий.", energy: "Последовательность принесёт лучший результат." },
-  "Водолей": { love: "Нестандартный взгляд поможет освежить отношения.", money: "Интересная идея может открыть новую возможность, если проверить её на практике.", energy: "Сегодня особенно сильны вдохновение и интеллектуальная активность." },
-  "Рыбы": { love: "Интуиция в любви сегодня работает особенно тонко.", money: "Лучше держаться понятных решений и не уходить в туманные обещания.", energy: "День поддерживает творчество и мягкое движение вперёд." }
+const codeMeanings = {
+  1: "Лидер. Ты умеешь начинать, брать инициативу и вести за собой.",
+  2: "Дипломат. Твоя сила — в мягкости, интуиции и умении чувствовать людей.",
+  3: "Творец. Ты раскрываешься через идеи, слово, красоту и вдохновение.",
+  4: "Опора. В тебе много устойчивости, дисциплины и способности строить систему.",
+  5: "Движение. Тебе близки перемены, свобода и живая энергия обновления.",
+  6: "Гармония. Ты умеешь заботиться, создавать тепло и поддерживать близких.",
+  7: "Глубина. Твой дар — аналитика, мудрость и сильный внутренний мир.",
+  8: "Сила. Ты умеешь влиять на реальность и добиваться конкретного результата.",
+  9: "Мудрость. В тебе есть зрелость, человечность и способность завершать этапы.",
+  11: "Вдохновение. Ты заряжаешь других своей интуицией и внутренним светом.",
+  22: "Создатель. В тебе заложен потенциал для больших и устойчивых проектов.",
+  33: "Проводник. Ты влияешь через добро, тепло и глубокую поддержку людей."
 };
 
-const motivationByCode = {
-  1: "Ты создан для инициативы. Один уверенный шаг сегодня меняет больше, чем долгие сомнения.",
-  2: "Твоя сила не в шуме, а в чуткости. Именно это сегодня даст тебе преимущество.",
-  3: "Твоя энергия раскрывается через слово, идею и творчество. Позволь себе быть заметным.",
-  4: "Каждый небольшой шаг укрепляет твою опору. Система сегодня работает на тебя.",
-  5: "Перемены открывают новые возможности. Доверься движению жизни.",
-  6: "Ты умеешь создавать гармонию. Не забывай направлять эту заботу и на себя.",
-  7: "Твоя глубина — это дар. Доверься внутреннему голосу.",
-  8: "Ты способен влиять на реальность через намерение и действие. Держи курс.",
-  9: "Сила дня — в завершении и мудрости. Освободи место для нового этапа.",
-  11: "Ты можешь вдохновлять других просто тем, что не прячешь свой свет.",
-  22: "В тебе есть масштаб создателя. Не недооценивай свои идеи.",
-  33: "Твоя доброта — это сила. Сегодня она особенно ценна."
+const personalMessages = {
+  1: "Твой день лучше складывается, когда ты доверяешь себе и не откладываешь первый шаг.",
+  2: "Твоя сила раскрывается в мягкости. Не обесценивай собственную чувствительность.",
+  3: "Тебе важно проявляться. Там, где есть творчество, появляется и энергия.",
+  4: "Твой путь строится через устойчивость. Маленькие шаги дают большой результат.",
+  5: "Чем больше движения и обновления, тем живее становится твоя энергия.",
+  6: "Не забывай давать себе столько же тепла, сколько ты даёшь другим.",
+  7: "Доверься внутреннему голосу. Он часто видит глубже, чем внешний шум.",
+  8: "У тебя есть мощная способность превращать намерение в результат.",
+  9: "Твоя сила в мудрости и умении отпускать то, что уже не работает.",
+  11: "Не прячь свой свет. Ты можешь вдохновлять даже просто своим присутствием.",
+  22: "Не бойся большого масштаба. Ты способен строить по-настоящему значимые вещи.",
+  33: "Ты умеешь лечить словом, вниманием и теплом. Это редкий дар."
 };
+
+function haptic(type = "light") {
+  try {
+    tg?.HapticFeedback?.impactOccurred(type);
+  } catch {}
+}
 
 const screens = {
   home: document.getElementById("screen-home"),
-  daily: document.getElementById("screen-daily"),
-  forecast: document.getElementById("screen-forecast"),
-  profile: document.getElementById("screen-profile"),
-  history: document.getElementById("screen-history"),
-  compatibility: document.getElementById("screen-compatibility"),
-  lucky: document.getElementById("screen-lucky"),
+  "profile-edit": document.getElementById("screen-profile-edit"),
+  "profile-view": document.getElementById("screen-profile-view"),
 };
 
 const navButtons = document.querySelectorAll(".nav-btn");
-const menuCards = document.querySelectorAll(".menu-card");
+const menuJumps = document.querySelectorAll(".menu-jump");
 const backBtn = document.getElementById("backBtn");
 const homeBtn = document.getElementById("homeBtn");
 
-let historyStack = ["home"];
+let screenHistory = ["home"];
 let currentScreen = "home";
 
 function updateControls() {
@@ -62,63 +63,40 @@ function updateControls() {
   homeBtn.classList.toggle("hidden", onHome);
 
   navButtons.forEach(btn => {
-    btn.classList.toggle("active", btn.dataset.target === currentScreen || (["forecast","compatibility","lucky"].includes(currentScreen) && btn.dataset.target === "home"));
+    btn.classList.toggle("active", btn.dataset.target === currentScreen);
   });
 }
 
 function showScreen(name, push = true) {
   if (!screens[name]) return;
+  haptic("light");
   Object.values(screens).forEach(screen => screen.classList.remove("active"));
   screens[name].classList.add("active");
-
-  if (push && currentScreen !== name) historyStack.push(name);
+  if (push && currentScreen !== name) screenHistory.push(name);
   currentScreen = name;
   updateControls();
+  if (name === "profile-view") renderProfileCard();
   window.scrollTo({ top: 0, behavior: "smooth" });
-
-  if (name === "history") renderHistory();
-  if (name === "profile") renderProfile();
 }
 
 function goBack() {
-  if (historyStack.length > 1) {
-    historyStack.pop();
-    const prev = historyStack[historyStack.length - 1];
-    showScreen(prev, false);
+  haptic("soft");
+  if (screenHistory.length > 1) {
+    screenHistory.pop();
+    showScreen(screenHistory[screenHistory.length - 1], false);
   } else {
     showScreen("home", false);
   }
 }
 
 navButtons.forEach(btn => btn.addEventListener("click", () => showScreen(btn.dataset.target)));
-menuCards.forEach(card => card.addEventListener("click", () => showScreen(card.dataset.target)));
+menuJumps.forEach(btn => btn.addEventListener("click", () => showScreen(btn.dataset.target)));
 backBtn.addEventListener("click", goBack);
 homeBtn.addEventListener("click", () => {
-  historyStack = ["home"];
+  haptic("soft");
+  screenHistory = ["home"];
   showScreen("home", false);
 });
-
-function setError(id, text = "") {
-  const el = document.getElementById(id);
-  if (!text) {
-    el.classList.add("hidden");
-    el.textContent = "";
-  } else {
-    el.textContent = text;
-    el.classList.remove("hidden");
-  }
-}
-
-function setSuccess(id, text = "") {
-  const el = document.getElementById(id);
-  if (!text) {
-    el.classList.add("hidden");
-    el.textContent = "";
-  } else {
-    el.textContent = text;
-    el.classList.remove("hidden");
-  }
-}
 
 function parseDate(value) {
   const match = value.trim().match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
@@ -155,14 +133,37 @@ function getHumanCode(dateStr) {
   return total;
 }
 
-function daySeed() {
+function calcLuckyNumber(zodiac, code) {
   const d = new Date();
-  return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+  const seed = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+  const base = [...zodiac].reduce((sum, ch) => sum + ch.charCodeAt(0), 0) + code * 9 + seed;
+  return (base % 9) + 1;
 }
 
-function calcLuckyNumber(zodiac, code) {
-  const base = [...zodiac].reduce((sum, ch) => sum + ch.charCodeAt(0), 0) + code * 9 + daySeed();
-  return (base % 9) + 1;
+function setText(id, text) {
+  document.getElementById(id).textContent = text;
+}
+
+function setError(id, text = "") {
+  const el = document.getElementById(id);
+  if (!text) {
+    el.classList.add("hidden");
+    el.textContent = "";
+  } else {
+    el.textContent = text;
+    el.classList.remove("hidden");
+  }
+}
+
+function setSuccess(id, text = "") {
+  const el = document.getElementById(id);
+  if (!text) {
+    el.classList.add("hidden");
+    el.textContent = "";
+  } else {
+    el.textContent = text;
+    el.classList.remove("hidden");
+  }
 }
 
 function getProfile() {
@@ -181,87 +182,69 @@ function clearProfile() {
   localStorage.removeItem(STORAGE_PROFILE);
 }
 
-function getHistory() {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_HISTORY) || "[]");
-  } catch {
-    return [];
-  }
-}
-
-function saveHistory(items) {
-  localStorage.setItem(STORAGE_HISTORY, JSON.stringify(items.slice(0, 20)));
-}
-
-function addHistoryItem(item) {
-  const items = getHistory();
-  items.unshift(item);
-  saveHistory(items);
-}
-
-function clearHistory() {
-  localStorage.removeItem(STORAGE_HISTORY);
-}
-
-function todayLabel() {
-  return new Date().toLocaleDateString("ru-RU");
-}
-
-function createForecast(dateStr, name = "") {
-  const parsed = parseDate(dateStr);
-  if (!parsed) return null;
-
-  const zodiac = getZodiac(parsed.day, parsed.month);
-  const code = getHumanCode(dateStr);
-  const lucky = calcLuckyNumber(zodiac, code);
-  const texts = zodiacTexts[zodiac];
-  const motivation = motivationByCode[code] || "Сегодня важно доверять себе и не занижать свою внутреннюю силу.";
-
-  return {
-    name,
-    date: todayLabel(),
-    birthdate: dateStr,
-    zodiac,
-    code,
-    lucky,
-    love: texts.love,
-    money: texts.money,
-    energy: texts.energy,
-    motivation,
-  };
-}
-
-function renderHomeProfile() {
+function updateHomePreview() {
   const profile = getProfile();
-  const text = document.getElementById("homeProfileText");
   if (!profile) {
-    text.textContent = "Пока не заполнен";
-    return;
-  }
-  const parsed = parseDate(profile.birthdate);
-  const zodiac = parsed ? getZodiac(parsed.day, parsed.month) : "—";
-  text.textContent = `${profile.name || "Без имени"} • ${profile.birthdate} • ${zodiac}`;
-}
-
-function renderProfile() {
-  const profile = getProfile();
-  const current = document.getElementById("profileCurrent");
-  if (!profile) {
-    current.textContent = "Профиль пока не сохранён.";
+    setText("homePreviewText", "Профиль ещё не заполнен");
     return;
   }
   const parsed = parseDate(profile.birthdate);
   const zodiac = parsed ? getZodiac(parsed.day, parsed.month) : "—";
   const code = getHumanCode(profile.birthdate);
-  current.textContent = `${profile.name || "Без имени"} • ${profile.birthdate} • ${zodiac} • код ${code}`;
+  setText("homePreviewText", `${profile.name || "Без имени"} • ${profile.birthdate} • ${zodiac} • код ${code}`);
+}
+
+function renderProfileCard() {
+  const profile = getProfile();
+  const empty = document.getElementById("emptyProfile");
+  const card = document.getElementById("profileCard");
+
+  if (!profile) {
+    empty.classList.remove("hidden");
+    card.classList.add("hidden");
+    return;
+  }
+
+  const parsed = parseDate(profile.birthdate);
+  if (!parsed) {
+    empty.classList.remove("hidden");
+    card.classList.add("hidden");
+    return;
+  }
+
+  const zodiac = getZodiac(parsed.day, parsed.month);
+  const code = getHumanCode(profile.birthdate);
+  const lucky = calcLuckyNumber(zodiac, code);
+  const firstLetter = (profile.name?.trim()?.[0] || "A").toUpperCase();
+
+  empty.classList.add("hidden");
+  card.classList.remove("hidden");
+
+  setText("avatarLetter", firstLetter);
+  setText("cardName", profile.name || "Без имени");
+  setText("cardZodiac", zodiac);
+  setText("cardBirthdate", profile.birthdate);
+  setText("cardCode", String(code));
+  setText("cardLucky", String(lucky));
+  setText("cardMeaning", codeMeanings[code] || "Твой код связан с внутренней силой, ростом и личной реализацией.");
+  setText("cardMessage", personalMessages[code] || "Доверяй себе и своему пути. Внутри тебя уже есть нужный ресурс.");
+
+  const today = new Date().toLocaleDateString("ru-RU");
+  setText("cardToday", today);
 }
 
 document.getElementById("saveProfileBtn").addEventListener("click", () => {
+  haptic("medium");
   setError("profileError");
   setSuccess("profileSuccess");
 
   const name = document.getElementById("profileName").value.trim();
   const birthdate = document.getElementById("profileBirthdate").value.trim();
+
+  if (!name) {
+    setError("profileError", "Введите имя");
+    return;
+  }
 
   if (!parseDate(birthdate)) {
     setError("profileError", "Введите дату в формате ДД.ММ.ГГГГ");
@@ -269,198 +252,33 @@ document.getElementById("saveProfileBtn").addEventListener("click", () => {
   }
 
   saveProfile({ name, birthdate });
-  renderHomeProfile();
-  renderProfile();
-  setSuccess("profileSuccess", "Профиль сохранён.");
+  updateHomePreview();
+  renderProfileCard();
+  setSuccess("profileSuccess", "Профиль сохранён");
+  showScreen("profile-view");
 });
 
 document.getElementById("clearProfileBtn").addEventListener("click", () => {
+  haptic("medium");
   clearProfile();
   document.getElementById("profileName").value = "";
   document.getElementById("profileBirthdate").value = "";
-  renderHomeProfile();
-  renderProfile();
-  setSuccess("profileSuccess", "Профиль очищен.");
+  updateHomePreview();
+  renderProfileCard();
   setError("profileError");
+  setSuccess("profileSuccess", "Профиль очищен");
 });
 
-document.getElementById("dailyBtn").addEventListener("click", () => {
-  setError("dailyError");
+function preloadProfile() {
+  const tgUser = tg?.initDataUnsafe?.user;
   const profile = getProfile();
-  if (!profile || !parseDate(profile.birthdate)) {
-    setError("dailyError", "Сначала сохрани дату рождения в профиле.");
-    return;
+
+  if (profile) {
+    document.getElementById("profileName").value = profile.name || "";
+    document.getElementById("profileBirthdate").value = profile.birthdate || "";
+  } else if (tgUser?.first_name) {
+    document.getElementById("profileName").value = tgUser.first_name;
   }
-
-  const forecast = createForecast(profile.birthdate, profile.name || "");
-  document.getElementById("dailyDateLabel").textContent = forecast.date;
-  document.getElementById("dailyTodayBadge").textContent = "Сегодня";
-  document.getElementById("dailyName").textContent = forecast.name || "—";
-  document.getElementById("dailyZodiac").textContent = forecast.zodiac;
-  document.getElementById("dailyCode").textContent = String(forecast.code);
-  document.getElementById("dailyLucky").textContent = String(forecast.lucky);
-  document.getElementById("dailyLove").textContent = forecast.love;
-  document.getElementById("dailyMoney").textContent = forecast.money;
-  document.getElementById("dailyEnergy").textContent = forecast.energy;
-  document.getElementById("dailyMotivation").textContent = forecast.motivation;
-  document.getElementById("dailyResult").classList.remove("hidden");
-
-  addHistoryItem({
-    type: "Ежедневный прогноз",
-    title: forecast.name ? `${forecast.name} • ${forecast.zodiac}` : forecast.zodiac,
-    date: forecast.date,
-    preview: `${forecast.love} ${forecast.motivation}`,
-  });
-});
-
-document.getElementById("forecastBtn").addEventListener("click", () => {
-  setError("forecastError");
-  const value = document.getElementById("forecastDate").value.trim();
-  const forecast = createForecast(value);
-  if (!forecast) {
-    setError("forecastError", "Введите дату в формате ДД.ММ.ГГГГ");
-    return;
-  }
-
-  document.getElementById("forecastDateLabel").textContent = forecast.date;
-  document.getElementById("forecastZodiac").textContent = forecast.zodiac;
-  document.getElementById("forecastCode").textContent = String(forecast.code);
-  document.getElementById("forecastLucky").textContent = String(forecast.lucky);
-  document.getElementById("forecastLove").textContent = forecast.love;
-  document.getElementById("forecastMoney").textContent = forecast.money;
-  document.getElementById("forecastEnergy").textContent = forecast.energy;
-  document.getElementById("forecastMotivation").textContent = forecast.motivation;
-  document.getElementById("forecastResult").classList.remove("hidden");
-
-  addHistoryItem({
-    type: "Разовый прогноз",
-    title: `${forecast.zodiac} • код ${forecast.code}`,
-    date: forecast.date,
-    preview: `${forecast.money} ${forecast.energy}`,
-  });
-});
-
-function compatibilityScore(code1, code2, zodiac1, zodiac2) {
-  let score = 52;
-  const diff = Math.abs(code1 - code2);
-  score += Math.max(0, 20 - diff * 2);
-  const groups = [
-    ["Овен", "Лев", "Стрелец"],
-    ["Телец", "Дева", "Козерог"],
-    ["Близнецы", "Весы", "Водолей"],
-    ["Рак", "Скорпион", "Рыбы"],
-  ];
-  if (zodiac1 === zodiac2) score += 15;
-  else {
-    for (const group of groups) {
-      if (group.includes(zodiac1) && group.includes(zodiac2)) {
-        score += 12;
-        break;
-      }
-    }
-  }
-  return Math.max(1, Math.min(99, score));
-}
-
-function compatibilityText(score) {
-  if (score >= 85) return "Очень сильная совместимость. Между вами легко возникает понимание и хороший эмоциональный контакт.";
-  if (score >= 70) return "Хорошая совместимость. У пары высокий потенциал при уважении особенностей друг друга.";
-  if (score >= 55) return "Средняя совместимость. Связь перспективная, но потребует зрелости и честного диалога.";
-  return "Совместимость непростая, но рабочая. Важны терпение, уважение границ и открытый разговор.";
-}
-
-document.getElementById("compatBtn").addEventListener("click", () => {
-  setError("compatError");
-  const value1 = document.getElementById("compatDate1").value.trim();
-  const value2 = document.getElementById("compatDate2").value.trim();
-  const parsed1 = parseDate(value1);
-  const parsed2 = parseDate(value2);
-
-  if (!parsed1 || !parsed2) {
-    setError("compatError", "Обе даты нужно ввести в формате ДД.ММ.ГГГГ");
-    return;
-  }
-
-  const zodiac1 = getZodiac(parsed1.day, parsed1.month);
-  const zodiac2 = getZodiac(parsed2.day, parsed2.month);
-  const code1 = getHumanCode(value1);
-  const code2 = getHumanCode(value2);
-  const score = compatibilityScore(code1, code2, zodiac1, zodiac2);
-
-  document.getElementById("compatScore").textContent = `${score}%`;
-  document.getElementById("compatText").textContent = compatibilityText(score);
-  document.getElementById("compatPerson1").textContent = `${zodiac1}, код ${code1}`;
-  document.getElementById("compatPerson2").textContent = `${zodiac2}, код ${code2}`;
-  document.getElementById("compatResult").classList.remove("hidden");
-
-  addHistoryItem({
-    type: "Совместимость",
-    title: `${zodiac1} + ${zodiac2}`,
-    date: todayLabel(),
-    preview: `Результат: ${score}%`,
-  });
-});
-
-document.getElementById("luckyBtn").addEventListener("click", () => {
-  setError("luckyError");
-  const value = document.getElementById("luckyDate").value.trim();
-  const parsed = parseDate(value);
-  if (!parsed) {
-    setError("luckyError", "Введите дату в формате ДД.ММ.ГГГГ");
-    return;
-  }
-
-  const zodiac = getZodiac(parsed.day, parsed.month);
-  const code = getHumanCode(value);
-  const lucky = calcLuckyNumber(zodiac, code);
-
-  document.getElementById("luckyValue").textContent = String(lucky);
-  document.getElementById("luckyMeta").textContent = `Знак: ${zodiac} • Код человека: ${code}`;
-  document.getElementById("luckyResult").classList.remove("hidden");
-
-  addHistoryItem({
-    type: "Счастливое число",
-    title: `${zodiac} • число ${lucky}`,
-    date: todayLabel(),
-    preview: `Код человека: ${code}`,
-  });
-});
-
-function renderHistory() {
-  const list = document.getElementById("historyList");
-  const empty = document.getElementById("historyEmpty");
-  const items = getHistory();
-
-  list.innerHTML = "";
-  if (!items.length) {
-    empty.classList.remove("hidden");
-    return;
-  }
-
-  empty.classList.add("hidden");
-  items.forEach(item => {
-    const div = document.createElement("div");
-    div.className = "glass history-item";
-    div.innerHTML = `
-      <div class="history-item__title">${item.type}: ${item.title}</div>
-      <div class="history-item__meta">${item.date}</div>
-      <div class="history-item__preview">${item.preview}</div>
-    `;
-    list.appendChild(div);
-  });
-}
-
-document.getElementById("refreshHistoryBtn").addEventListener("click", renderHistory);
-document.getElementById("clearHistoryBtn").addEventListener("click", () => {
-  clearHistory();
-  renderHistory();
-});
-
-function preloadProfileForm() {
-  const profile = getProfile();
-  if (!profile) return;
-  document.getElementById("profileName").value = profile.name || "";
-  document.getElementById("profileBirthdate").value = profile.birthdate || "";
 }
 
 function setupStars() {
@@ -471,9 +289,12 @@ function setupStars() {
   let height = 0;
 
   function resize() {
-    width = canvas.width = window.innerWidth * Math.min(window.devicePixelRatio || 1, 2);
-    height = canvas.height = window.innerHeight * Math.min(window.devicePixelRatio || 1, 2);
-    stars = Array.from({ length: Math.max(80, Math.floor(window.innerWidth / 10)) }, () => ({
+    const ratio = Math.min(window.devicePixelRatio || 1, 2);
+    width = canvas.width = window.innerWidth * ratio;
+    height = canvas.height = window.innerHeight * ratio;
+    canvas.style.width = window.innerWidth + "px";
+    canvas.style.height = window.innerHeight + "px";
+    stars = Array.from({ length: Math.max(70, Math.floor(window.innerWidth / 10)) }, () => ({
       x: Math.random() * width,
       y: Math.random() * height,
       r: Math.random() * 1.8 + 0.4,
@@ -501,8 +322,7 @@ function setupStars() {
 }
 
 setupStars();
-preloadProfileForm();
-renderHomeProfile();
-renderProfile();
-renderHistory();
+preloadProfile();
+updateHomePreview();
+renderProfileCard();
 updateControls();

@@ -2,9 +2,9 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Astro App Plus</title>
-  <meta name="theme-color" content="#08101d">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+  <title>Astro Profile</title>
+  <meta name="theme-color" content="#0b1020">
   <link rel="stylesheet" href="./styles.css">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
@@ -17,8 +17,8 @@
       <div class="brand">
         <div class="brand__logo">✦</div>
         <div>
-          <div class="brand__title">Astro App Plus</div>
-          <div class="brand__subtitle">Прогнозы, профиль и история</div>
+          <div class="brand__title">Astro App</div>
+          <div class="brand__subtitle">Красивый профиль пользователя</div>
         </div>
       </div>
       <button id="homeBtn" class="icon-btn hidden" aria-label="Главная">⌂</button>
@@ -28,62 +28,25 @@
       <section id="screen-home" class="screen active">
         <div class="hero-card glass">
           <div class="hero-card__tag">Mini App</div>
-          <h1>Астроприложение внутри Telegram</h1>
-          <p>Сохраняй дату рождения, смотри ежедневный прогноз, открывай профиль и храни историю прогнозов прямо в приложении.</p>
-        </div>
-
-        <div class="profile-summary glass">
-          <div>
-            <div class="profile-summary__label">Сохранённый профиль</div>
-            <div id="homeProfileText" class="profile-summary__value">Пока не заполнен</div>
+          <h1>Профиль в стиле приложения</h1>
+          <p>Сохрани дату рождения и открой красивую карточку профиля с числом, знаком зодиака и кратким описанием.</p>
+          <div class="hero-actions">
+            <button class="primary-btn menu-jump" data-target="profile-edit">Создать профиль</button>
+            <button class="secondary-btn menu-jump" data-target="profile-view">Открыть профиль</button>
           </div>
-          <button class="secondary-btn" data-target="profile">Открыть</button>
         </div>
 
-        <div class="grid-menu">
-          <button class="menu-card glass" data-target="daily">
-            <div class="menu-card__icon">📅</div>
-            <div class="menu-card__title">Ежедневный прогноз</div>
-            <div class="menu-card__text">На сегодня по сохранённой дате</div>
-          </button>
-
-          <button class="menu-card glass" data-target="forecast">
-            <div class="menu-card__icon">🔮</div>
-            <div class="menu-card__title">Разовый прогноз</div>
-            <div class="menu-card__text">По любой дате рождения</div>
-          </button>
-
-          <button class="menu-card glass" data-target="profile">
-            <div class="menu-card__icon">👤</div>
-            <div class="menu-card__title">Профиль</div>
-            <div class="menu-card__text">Сохранение даты рождения</div>
-          </button>
-
-          <button class="menu-card glass" data-target="history">
-            <div class="menu-card__icon">📊</div>
-            <div class="menu-card__title">История</div>
-            <div class="menu-card__text">Последние прогнозы</div>
-          </button>
-
-          <button class="menu-card glass" data-target="compatibility">
-            <div class="menu-card__icon">💕</div>
-            <div class="menu-card__title">Совместимость</div>
-            <div class="menu-card__text">По двум датам рождения</div>
-          </button>
-
-          <button class="menu-card glass" data-target="lucky">
-            <div class="menu-card__icon">🍀</div>
-            <div class="menu-card__title">Счастливое число</div>
-            <div class="menu-card__text">На текущий день</div>
-          </button>
+        <div class="home-preview glass">
+          <div class="home-preview__label">Быстрый просмотр</div>
+          <div id="homePreviewText" class="home-preview__value">Профиль ещё не заполнен</div>
         </div>
       </section>
 
-      <section id="screen-profile" class="screen">
+      <section id="screen-profile-edit" class="screen">
         <div class="screen-head">
           <div>
-            <div class="screen-head__eyebrow">Профиль</div>
-            <h2>Сохранение даты рождения</h2>
+            <div class="screen-head__eyebrow">Настройка</div>
+            <h2>Создать профиль</h2>
           </div>
         </div>
 
@@ -102,217 +65,59 @@
           <p id="profileError" class="error hidden"></p>
           <p id="profileSuccess" class="success hidden"></p>
         </div>
-
-        <div class="glass info-card">
-          <div class="info-card__title">Текущий профиль</div>
-          <p id="profileCurrent">Профиль пока не сохранён.</p>
-        </div>
       </section>
 
-      <section id="screen-daily" class="screen">
+      <section id="screen-profile-view" class="screen">
         <div class="screen-head">
           <div>
-            <div class="screen-head__eyebrow">Сегодня</div>
-            <h2>Ежедневный прогноз</h2>
+            <div class="screen-head__eyebrow">Профиль</div>
+            <h2>Карточка пользователя</h2>
           </div>
         </div>
 
-        <div class="glass form-card">
-          <p class="muted no-margin">Прогноз строится по сохранённой дате рождения из профиля.</p>
-          <button id="dailyBtn" class="primary-btn">Показать мой прогноз</button>
-          <p id="dailyError" class="error hidden"></p>
-        </div>
+        <div id="emptyProfile" class="glass empty-card">Профиль пока не создан. Сначала сохрани имя и дату рождения.</div>
 
-        <div id="dailyResult" class="hidden result-stack">
-          <div class="glass result-header">
-            <div>
-              <div class="result-header__eyebrow">Прогноз на сегодня</div>
-              <div id="dailyDateLabel" class="result-header__title"></div>
+        <div id="profileCard" class="profile-card glass hidden">
+          <div class="profile-card__top">
+            <div class="avatar-ring">
+              <div id="avatarLetter" class="avatar-letter">A</div>
             </div>
-            <div id="dailyTodayBadge" class="pill"></div>
-          </div>
 
-          <div class="glass stat-grid">
-            <div class="stat-card">
-              <span>Имя</span>
-              <strong id="dailyName"></strong>
-            </div>
-            <div class="stat-card">
-              <span>Знак</span>
-              <strong id="dailyZodiac"></strong>
-            </div>
-            <div class="stat-card">
-              <span>Код</span>
-              <strong id="dailyCode"></strong>
-            </div>
-            <div class="stat-card">
-              <span>Число</span>
-              <strong id="dailyLucky"></strong>
+            <div class="profile-main">
+              <div id="cardName" class="profile-name">Имя</div>
+              <div id="cardZodiac" class="profile-zodiac">Знак зодиака</div>
+              <div class="profile-badges">
+                <span class="badge">✨ Astro Profile</span>
+                <span id="cardToday" class="badge">Сегодня</span>
+              </div>
             </div>
           </div>
 
-          <div class="glass info-card">
-            <div class="info-card__title">❤️ Любовь</div>
-            <p id="dailyLove"></p>
-          </div>
-          <div class="glass info-card">
-            <div class="info-card__title">💰 Деньги</div>
-            <p id="dailyMoney"></p>
-          </div>
-          <div class="glass info-card">
-            <div class="info-card__title">⚡ Энергия</div>
-            <p id="dailyEnergy"></p>
-          </div>
-          <div class="glass info-card accent">
-            <div class="info-card__title">🚀 Мотивация дня</div>
-            <p id="dailyMotivation"></p>
-          </div>
-        </div>
-      </section>
-
-      <section id="screen-forecast" class="screen">
-        <div class="screen-head">
-          <div>
-            <div class="screen-head__eyebrow">Функция</div>
-            <h2>Разовый прогноз</h2>
-          </div>
-        </div>
-
-        <div class="glass form-card">
-          <label for="forecastDate">Дата рождения</label>
-          <input id="forecastDate" type="text" placeholder="24.11.1997" maxlength="10" inputmode="numeric">
-          <button id="forecastBtn" class="primary-btn">Показать прогноз</button>
-          <p id="forecastError" class="error hidden"></p>
-        </div>
-
-        <div id="forecastResult" class="hidden result-stack">
-          <div class="glass result-header">
-            <div>
-              <div class="result-header__eyebrow">Разовый прогноз</div>
-              <div id="forecastDateLabel" class="result-header__title"></div>
+          <div class="profile-stats">
+            <div class="stat-block">
+              <span>Дата рождения</span>
+              <strong id="cardBirthdate">24.11.1997</strong>
             </div>
-            <div class="pill">История сохраняется</div>
-          </div>
-
-          <div class="glass stat-grid">
-            <div class="stat-card">
-              <span>Знак</span>
-              <strong id="forecastZodiac"></strong>
+            <div class="stat-block">
+              <span>Код человека</span>
+              <strong id="cardCode">7</strong>
             </div>
-            <div class="stat-card">
-              <span>Код</span>
-              <strong id="forecastCode"></strong>
-            </div>
-            <div class="stat-card">
-              <span>Число</span>
-              <strong id="forecastLucky"></strong>
+            <div class="stat-block">
+              <span>Счастливое число</span>
+              <strong id="cardLucky">4</strong>
             </div>
           </div>
 
-          <div class="glass info-card">
-            <div class="info-card__title">❤️ Любовь</div>
-            <p id="forecastLove"></p>
+          <div class="glass inner-card">
+            <div class="inner-card__title">Описание кода</div>
+            <p id="cardMeaning"></p>
           </div>
 
-          <div class="glass info-card">
-            <div class="info-card__title">💰 Деньги</div>
-            <p id="forecastMoney"></p>
-          </div>
-
-          <div class="glass info-card">
-            <div class="info-card__title">⚡ Энергия</div>
-            <p id="forecastEnergy"></p>
-          </div>
-
-          <div class="glass info-card accent">
-            <div class="info-card__title">🚀 Мотивация</div>
-            <p id="forecastMotivation"></p>
+          <div class="glass inner-card accent">
+            <div class="inner-card__title">Личное послание</div>
+            <p id="cardMessage"></p>
           </div>
         </div>
-      </section>
-
-      <section id="screen-compatibility" class="screen">
-        <div class="screen-head">
-          <div>
-            <div class="screen-head__eyebrow">Функция</div>
-            <h2>Совместимость</h2>
-          </div>
-        </div>
-
-        <div class="glass form-card">
-          <label for="compatDate1">Первая дата рождения</label>
-          <input id="compatDate1" type="text" placeholder="24.11.1997" maxlength="10" inputmode="numeric">
-
-          <label for="compatDate2">Вторая дата рождения</label>
-          <input id="compatDate2" type="text" placeholder="13.03.1995" maxlength="10" inputmode="numeric">
-
-          <button id="compatBtn" class="primary-btn">Посчитать совместимость</button>
-          <p id="compatError" class="error hidden"></p>
-        </div>
-
-        <div id="compatResult" class="hidden result-stack">
-          <div class="glass compatibility-score">
-            <div class="compatibility-score__label">Совместимость</div>
-            <div id="compatScore" class="compatibility-score__value">0%</div>
-            <div id="compatText" class="compatibility-score__text"></div>
-          </div>
-
-          <div class="glass stat-grid">
-            <div class="stat-card">
-              <span>1 человек</span>
-              <strong id="compatPerson1"></strong>
-            </div>
-            <div class="stat-card">
-              <span>2 человек</span>
-              <strong id="compatPerson2"></strong>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="screen-lucky" class="screen">
-        <div class="screen-head">
-          <div>
-            <div class="screen-head__eyebrow">Функция</div>
-            <h2>Счастливое число</h2>
-          </div>
-        </div>
-
-        <div class="glass form-card">
-          <label for="luckyDate">Дата рождения</label>
-          <input id="luckyDate" type="text" placeholder="24.11.1997" maxlength="10" inputmode="numeric">
-          <button id="luckyBtn" class="primary-btn">Узнать число</button>
-          <p id="luckyError" class="error hidden"></p>
-        </div>
-
-        <div id="luckyResult" class="hidden result-stack">
-          <div class="glass lucky-card">
-            <div class="lucky-card__icon">🍀</div>
-            <div class="lucky-card__label">Твоё счастливое число</div>
-            <div id="luckyValue" class="lucky-card__value"></div>
-            <div id="luckyMeta" class="lucky-card__meta"></div>
-          </div>
-        </div>
-      </section>
-
-      <section id="screen-history" class="screen">
-        <div class="screen-head">
-          <div>
-            <div class="screen-head__eyebrow">Архив</div>
-            <h2>История прогнозов</h2>
-          </div>
-        </div>
-
-        <div class="glass form-card">
-          <p class="muted no-margin">Здесь хранятся последние прогнозы, которые ты открывал в приложении.</p>
-          <div class="button-row">
-            <button id="refreshHistoryBtn" class="secondary-btn">Обновить</button>
-            <button id="clearHistoryBtn" class="danger-btn">Очистить историю</button>
-          </div>
-        </div>
-
-        <div id="historyEmpty" class="glass empty-card">История пока пустая.</div>
-        <div id="historyList" class="history-list"></div>
       </section>
     </main>
 
@@ -321,17 +126,13 @@
         <span>⌂</span>
         <small>Главная</small>
       </button>
-      <button class="nav-btn" data-target="daily">
-        <span>📅</span>
-        <small>Сегодня</small>
+      <button class="nav-btn" data-target="profile-edit">
+        <span>✎</span>
+        <small>Заполнить</small>
       </button>
-      <button class="nav-btn" data-target="profile">
+      <button class="nav-btn" data-target="profile-view">
         <span>👤</span>
         <small>Профиль</small>
-      </button>
-      <button class="nav-btn" data-target="history">
-        <span>📊</span>
-        <small>История</small>
       </button>
     </nav>
   </div>
