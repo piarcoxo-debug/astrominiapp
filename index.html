@@ -18,7 +18,7 @@
         <div class="brand__logo">✦</div>
         <div>
           <div class="brand__title">Astro App</div>
-          <div class="brand__subtitle">Красивая версия без базы</div>
+          <div class="brand__subtitle">Нижняя навигация как в приложении</div>
         </div>
       </div>
       <button id="homeBtn" class="icon-btn hidden">⌂</button>
@@ -27,9 +27,9 @@
     <main class="phone-frame">
       <section id="screen-home" class="screen active">
         <div class="hero-card glass">
-          <div class="chip">Beautiful No DB</div>
-          <h1>Все функции меню сохранены</h1>
-          <p>Профиль стал красивее, но прогноз, совместимость, счастливое число и история остались на месте.</p>
+          <div class="chip">Nav v2</div>
+          <h1>Красивая нижняя навигация</h1>
+          <p>Иконка сверху, подпись снизу — как в настоящем мобильном приложении.</p>
         </div>
 
         <div class="home-preview glass">
@@ -131,10 +131,22 @@
     </main>
 
     <nav class="bottom-nav glass">
-      <button class="nav-btn active" data-target="home">Главная</button>
-      <button class="nav-btn" data-target="profile">Профиль</button>
-      <button class="nav-btn" data-target="forecast">Прогноз</button>
-      <button class="nav-btn" data-target="history">История</button>
+      <button class="nav-btn active" data-target="home">
+        <span class="nav-btn__icon">⌂</span>
+        <span class="nav-btn__label">Главная</span>
+      </button>
+      <button class="nav-btn" data-target="profile">
+        <span class="nav-btn__icon">👤</span>
+        <span class="nav-btn__label">Профиль</span>
+      </button>
+      <button class="nav-btn" data-target="forecast">
+        <span class="nav-btn__icon">🔮</span>
+        <span class="nav-btn__label">Прогноз</span>
+      </button>
+      <button class="nav-btn" data-target="history">
+        <span class="nav-btn__icon">📊</span>
+        <span class="nav-btn__label">История</span>
+      </button>
     </nav>
   </div>
 
