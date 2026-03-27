@@ -18,7 +18,7 @@
         <div class="brand__logo">✦</div>
         <div>
           <div class="brand__title">Astro App</div>
-          <div class="brand__subtitle">Нижняя навигация как в приложении</div>
+          <div class="brand__subtitle">Версия с тремя мини-играми</div>
         </div>
       </div>
       <button id="homeBtn" class="icon-btn hidden">⌂</button>
@@ -27,9 +27,9 @@
     <main class="phone-frame">
       <section id="screen-home" class="screen active">
         <div class="hero-card glass">
-          <div class="chip">Nav v2</div>
-          <h1>Красивая нижняя навигация</h1>
-          <p>Иконка сверху, подпись снизу — как в настоящем мобильном приложении.</p>
+          <div class="chip">Game Pack</div>
+          <h1>Три игры внутри mini app</h1>
+          <p>Сохранил все основные функции и добавил сразу три игры: «Поймай звезду», «Астро-угадайка» и «Колесо удачи дня».</p>
         </div>
 
         <div class="home-preview glass">
@@ -63,6 +63,21 @@
             <span class="menu-card__title">История</span>
             <span class="menu-card__text">Последние действия в приложении</span>
           </button>
+          <button class="menu-card glass" data-target="game-catch">
+            <span class="menu-card__icon">⭐</span>
+            <span class="menu-card__title">Поймай звезду</span>
+            <span class="menu-card__text">Лови звёзды за 20 секунд</span>
+          </button>
+          <button class="menu-card glass" data-target="game-quiz">
+            <span class="menu-card__icon">🪐</span>
+            <span class="menu-card__title">Астро-угадайка</span>
+            <span class="menu-card__text">Угадай знак по описанию</span>
+          </button>
+          <button class="menu-card glass" data-target="game-wheel">
+            <span class="menu-card__icon">🎡</span>
+            <span class="menu-card__title">Колесо удачи</span>
+            <span class="menu-card__text">Получи послание дня</span>
+          </button>
         </div>
       </section>
 
@@ -79,7 +94,6 @@
           </div>
           <p id="profileMsg" class="note"></p>
         </div>
-
         <div id="profileView" class="hidden profile-card glass"></div>
       </section>
 
@@ -128,6 +142,62 @@
         </div>
         <div id="historyList" class="result-stack"></div>
       </section>
+
+      <section id="screen-game-catch" class="screen">
+        <div class="section-title">Поймай звезду</div>
+        <div class="glass form-card">
+          <p class="note">Нажимай на звезду, пока идёт таймер. У тебя 20 секунд.</p>
+          <div class="game-stats">
+            <div class="game-pill">⏱ <span id="catchTime">20</span> сек</div>
+            <div class="game-pill">⭐ Счёт: <span id="catchScore">0</span></div>
+            <div class="game-pill">🏆 Рекорд: <span id="catchBest">0</span></div>
+          </div>
+          <div class="button-row">
+            <button id="startCatchBtn" class="primary-btn">Начать игру</button>
+            <button id="stopCatchBtn" class="secondary-btn">Стоп</button>
+          </div>
+        </div>
+        <div class="glass game-board-wrap">
+          <div id="catchBoard" class="game-board">
+            <button id="starBtn" class="star-btn hidden">⭐</button>
+            <div id="catchOverlay" class="game-overlay">
+              <div class="game-overlay__title">Готов к игре?</div>
+              <div class="game-overlay__text">Нажми «Начать игру», и лови звёзды как можно быстрее.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-game-quiz" class="screen">
+        <div class="section-title">Астро-угадайка</div>
+        <div class="glass form-card">
+          <p class="note">Прочитай описание и выбери правильный знак зодиака.</p>
+          <div id="quizPrompt" class="quiz-prompt">Нажми «Новый вопрос».</div>
+          <div id="quizOptions" class="quiz-options"></div>
+          <div class="button-row">
+            <button id="newQuizBtn" class="primary-btn">Новый вопрос</button>
+          </div>
+          <p id="quizMsg" class="note"></p>
+          <div class="game-stats">
+            <div class="game-pill">✅ Верно: <span id="quizCorrect">0</span></div>
+            <div class="game-pill">❌ Ошибки: <span id="quizWrong">0</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-game-wheel" class="screen">
+        <div class="section-title">Колесо удачи дня</div>
+        <div class="glass form-card">
+          <p class="note">Нажми на кнопку и получи случайное астропослание на сегодня.</p>
+          <div class="wheel-wrap">
+            <div id="wheelDisc" class="wheel-disc">✨</div>
+          </div>
+          <div class="button-row">
+            <button id="spinWheelBtn" class="primary-btn">Крутить колесо</button>
+          </div>
+        </div>
+        <div id="wheelResult" class="hidden result-stack"></div>
+      </section>
     </main>
 
     <nav class="bottom-nav glass">
@@ -143,9 +213,9 @@
         <span class="nav-btn__icon">🔮</span>
         <span class="nav-btn__label">Прогноз</span>
       </button>
-      <button class="nav-btn" data-target="history">
-        <span class="nav-btn__icon">📊</span>
-        <span class="nav-btn__label">История</span>
+      <button class="nav-btn" data-target="game-catch">
+        <span class="nav-btn__icon">🎮</span>
+        <span class="nav-btn__label">Игры</span>
       </button>
     </nav>
   </div>

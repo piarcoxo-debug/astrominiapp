@@ -1,8 +1,10 @@
 const tg = window.Telegram?.WebApp;
 if (tg) { tg.ready(); tg.expand(); tg.MainButton.hide(); }
 
-const STORAGE_PROFILE = "astro_nodb_beautiful_profile";
-const STORAGE_HISTORY = "astro_nodb_beautiful_history";
+const STORAGE_PROFILE = "astro_games_profile";
+const STORAGE_HISTORY = "astro_games_history";
+const STORAGE_GAME_BEST = "astro_games_catch_best";
+const STORAGE_QUIZ_STATS = "astro_games_quiz_stats";
 
 const texts = {
   "Овен": { love: "Сегодня в любви важны прямота и уважение.", money: "Действуй быстро, но не импульсивно.", energy: "Энергии много — направь её в одну цель." },
@@ -38,6 +40,30 @@ const personalMessages = {
   22:"В тебе есть потенциал для больших дел.",
   33:"Твоя доброта и забота реально меняют мир вокруг."
 };
+const quizBank = [
+  { sign: "Овен", prompt: "Этот знак любит старт, движение и действует первым." },
+  { sign: "Телец", prompt: "Этот знак ценит стабильность, комфорт и практичность." },
+  { sign: "Близнецы", prompt: "Этот знак связан с общением, идеями и быстрой сменой интересов." },
+  { sign: "Рак", prompt: "Этот знак чувствительный, семейный и очень эмоциональный." },
+  { sign: "Лев", prompt: "Этот знак яркий, любит быть заметным и проявлять лидерство." },
+  { sign: "Дева", prompt: "Этот знак внимателен к деталям, любит порядок и систему." },
+  { sign: "Весы", prompt: "Этот знак стремится к балансу, красоте и гармонии в отношениях." },
+  { sign: "Скорпион", prompt: "Этот знак глубокий, сильный и умеет держать фокус." },
+  { sign: "Стрелец", prompt: "Этот знак любит свободу, развитие и новые горизонты." },
+  { sign: "Козерог", prompt: "Этот знак дисциплинированный, надежный и ориентирован на результат." },
+  { sign: "Водолей", prompt: "Этот знак мыслит нестандартно, любит идеи и свободу мышления." },
+  { sign: "Рыбы", prompt: "Этот знак интуитивный, творческий и тонко чувствует мир." },
+];
+const wheelMessages = [
+  "Сегодня тебе особенно повезёт в новых начинаниях.",
+  "День подсказывает не спешить и прислушаться к интуиции.",
+  "Хороший момент для честного разговора и ясных решений.",
+  "Удача включается, когда ты действуешь спокойно и уверенно.",
+  "Сегодня маленький шаг может дать большой результат.",
+  "День подходит для творчества, вдохновения и лёгкости.",
+  "Не бойся менять курс — сегодня это может быть верным решением.",
+  "Фокус на себе и своих целях даст тебе мощный ресурс."
+];
 
 const screens = {
   home: document.getElementById("screen-home"),
@@ -46,10 +72,18 @@ const screens = {
   compatibility: document.getElementById("screen-compatibility"),
   lucky: document.getElementById("screen-lucky"),
   history: document.getElementById("screen-history"),
+  "game-catch": document.getElementById("screen-game-catch"),
+  "game-quiz": document.getElementById("screen-game-quiz"),
+  "game-wheel": document.getElementById("screen-game-wheel"),
 };
 
 let stack = ["home"];
 let current = "home";
+let catchTimer = null;
+let catchMoveTimer = null;
+let catchTimeLeft = 20;
+let catchScore = 0;
+let currentQuiz = null;
 
 function haptic(type="light") { try { tg?.HapticFeedback?.impactOccurred(type); } catch {} }
 function show(name, push=true) {
@@ -60,9 +94,11 @@ function show(name, push=true) {
   current = name;
   document.getElementById("backBtn").classList.toggle("hidden", current === "home");
   document.getElementById("homeBtn").classList.toggle("hidden", current === "home");
-  document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("active", b.dataset.target === name));
+  document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("active", b.dataset.target === name || (name.startsWith("game") && b.dataset.target === "game-catch")));
   if (name === "profile") renderProfile();
   if (name === "history") renderHistory();
+  if (name === "game-catch") renderCatchBest();
+  if (name === "game-quiz") renderQuizStats();
 }
 document.querySelectorAll(".menu-card,.nav-btn").forEach(btn => btn.addEventListener("click", () => { haptic(); show(btn.dataset.target); }));
 document.getElementById("backBtn").addEventListener("click", () => { haptic("soft"); if (stack.length > 1) { stack.pop(); show(stack[stack.length - 1], false); } });
@@ -284,6 +320,140 @@ document.getElementById("clearHistoryBtn").addEventListener("click", () => {
   renderHistory();
 });
 
+// Catch game
+const catchBoard = document.getElementById("catchBoard");
+const starBtn = document.getElementById("starBtn");
+const catchOverlay = document.getElementById("catchOverlay");
+const catchTimeEl = document.getElementById("catchTime");
+const catchScoreEl = document.getElementById("catchScore");
+const catchBestEl = document.getElementById("catchBest");
+
+function getCatchBest() { return Number(localStorage.getItem(STORAGE_GAME_BEST) || 0); }
+function setCatchBest(score) { localStorage.setItem(STORAGE_GAME_BEST, String(score)); }
+function renderCatchBest() { catchBestEl.textContent = String(getCatchBest()); }
+function moveStar() {
+  const boardRect = catchBoard.getBoundingClientRect();
+  const size = 64;
+  const maxX = Math.max(0, boardRect.width - size - 10);
+  const maxY = Math.max(0, boardRect.height - size - 10);
+  starBtn.style.left = `${Math.random() * maxX}px`;
+  starBtn.style.top = `${Math.random() * maxY}px`;
+}
+function stopCatch(saveHist=true) {
+  clearInterval(catchTimer);
+  clearInterval(catchMoveTimer);
+  catchTimer = null;
+  catchMoveTimer = null;
+  starBtn.classList.add("hidden");
+  catchOverlay.classList.remove("hidden");
+  if (catchScore > getCatchBest()) {
+    setCatchBest(catchScore);
+    renderCatchBest();
+  }
+  catchOverlay.innerHTML = `<div><div class="game-overlay__title">Игра окончена</div><div class="game-overlay__text">Твой счёт: ${catchScore}. Лучший результат: ${getCatchBest()}.</div></div>`;
+  if (saveHist) addHistory("Мини-игра", `Поймай звезду • ${catchScore} очков`, `Рекорд: ${getCatchBest()}`);
+}
+function startCatch() {
+  if (catchTimer) stopCatch(false);
+  haptic("medium");
+  catchTimeLeft = 20;
+  catchScore = 0;
+  catchTimeEl.textContent = String(catchTimeLeft);
+  catchScoreEl.textContent = "0";
+  catchOverlay.classList.add("hidden");
+  starBtn.classList.remove("hidden");
+  moveStar();
+  catchMoveTimer = setInterval(moveStar, 850);
+  catchTimer = setInterval(() => {
+    catchTimeLeft -= 1;
+    catchTimeEl.textContent = String(catchTimeLeft);
+    if (catchTimeLeft <= 0) stopCatch(true);
+  }, 1000);
+}
+document.getElementById("startCatchBtn").addEventListener("click", startCatch);
+document.getElementById("stopCatchBtn").addEventListener("click", () => stopCatch(true));
+starBtn.addEventListener("click", () => {
+  if (!catchTimer) return;
+  haptic("light");
+  catchScore += 1;
+  catchScoreEl.textContent = String(catchScore);
+  moveStar();
+});
+
+// Quiz game
+function getQuizStats() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_QUIZ_STATS) || '{"correct":0,"wrong":0}'); } catch { return {correct:0, wrong:0}; }
+}
+function saveQuizStats(stats) { localStorage.setItem(STORAGE_QUIZ_STATS, JSON.stringify(stats)); }
+function renderQuizStats() {
+  const stats = getQuizStats();
+  document.getElementById("quizCorrect").textContent = String(stats.correct);
+  document.getElementById("quizWrong").textContent = String(stats.wrong);
+}
+function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+function newQuizQuestion() {
+  currentQuiz = quizBank[Math.floor(Math.random() * quizBank.length)];
+  document.getElementById("quizPrompt").textContent = currentQuiz.prompt;
+  document.getElementById("quizMsg").textContent = "";
+  const wrongSigns = shuffle(quizBank.filter(x => x.sign !== currentQuiz.sign)).slice(0, 3).map(x => x.sign);
+  const options = shuffle([currentQuiz.sign, ...wrongSigns]);
+  const wrap = document.getElementById("quizOptions");
+  wrap.innerHTML = "";
+  options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.className = "quiz-option";
+    btn.textContent = opt;
+    btn.addEventListener("click", () => answerQuiz(btn, opt));
+    wrap.appendChild(btn);
+  });
+}
+function answerQuiz(button, opt) {
+  if (!currentQuiz) return;
+  const stats = getQuizStats();
+  const buttons = [...document.querySelectorAll(".quiz-option")];
+  buttons.forEach(b => b.disabled = true);
+  if (opt === currentQuiz.sign) {
+    button.classList.add("correct");
+    document.getElementById("quizMsg").textContent = `Верно! Это ${currentQuiz.sign}.`;
+    stats.correct += 1;
+    addHistory("Астро-угадайка", `Верно: ${currentQuiz.sign}`, currentQuiz.prompt);
+    haptic("medium");
+  } else {
+    button.classList.add("wrong");
+    const correctBtn = buttons.find(b => b.textContent === currentQuiz.sign);
+    if (correctBtn) correctBtn.classList.add("correct");
+    document.getElementById("quizMsg").textContent = `Не угадал. Правильный ответ: ${currentQuiz.sign}.`;
+    stats.wrong += 1;
+    addHistory("Астро-угадайка", `Ошибка`, `Правильный ответ: ${currentQuiz.sign}`);
+    haptic("soft");
+  }
+  saveQuizStats(stats);
+  renderQuizStats();
+}
+document.getElementById("newQuizBtn").addEventListener("click", () => {
+  haptic("light");
+  newQuizQuestion();
+});
+
+// Wheel game
+const wheelDisc = document.getElementById("wheelDisc");
+let wheelRotation = 0;
+document.getElementById("spinWheelBtn").addEventListener("click", () => {
+  haptic("medium");
+  wheelRotation += 1440 + Math.floor(Math.random() * 1440);
+  wheelDisc.style.transform = `rotate(${wheelRotation}deg)`;
+  const msg = wheelMessages[Math.floor(Math.random() * wheelMessages.length)];
+  setTimeout(() => {
+    const wrap = document.getElementById("wheelResult");
+    wrap.innerHTML = [
+      card("Послание дня", msg, true),
+      card("Совет", "Запомни это состояние и попробуй опереться на него сегодня.")
+    ].join("");
+    wrap.classList.remove("hidden");
+    addHistory("Колесо удачи", "Послание дня", msg);
+  }, 2200);
+});
+
 function setupStars() {
   const canvas = document.getElementById("starsCanvas");
   const ctx = canvas.getContext("2d");
@@ -320,3 +490,5 @@ setupStars();
 updateHomePreview();
 renderProfile();
 renderHistory();
+renderCatchBest();
+renderQuizStats();
